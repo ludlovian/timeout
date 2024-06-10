@@ -1,6 +1,6 @@
 {
   "name": "@ludlovian/timeout",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Wraps a promsie in a timeout",
   "type": "module",
   "exports": "./src/index.mjs",
