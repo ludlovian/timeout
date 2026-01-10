@@ -1,20 +1,21 @@
 # timeout
-Wraps a promise or async function in a timeout
+Wraps a promise in a timeout
 
-## timeout(Function | Promise, [ms, [ErrorClass]]) => Function | Promsie
-```
-import timeout from '@ludlovian/timeout'
+## timeout(Promise [, ms]) => Promsie
 
-wrappedFunction = timeout(fn, ms)
-await wrappedFunction(x, y, ...)
+Available as a named export and the default
 
-await timeout(asyncFn(x, y...), ms, CustomError)
-```
+Arguments:
+- `promise` - the promise to wrap
+- `ms` - milliseconds after which the promise will be rejected
 
-Takes three arguments:
-- `promiseOrFunction` - either the promise to wrap, or a promise-producing function
-- `ms` (optional) - milliseconds after which the promise will be rejected
-- `CustomError` (optional) - the error class to use. Will use `timeout.TimeoutError` by default
+If no `ms` is provided, then no timeout will be added
 
-If a function is provided, then a wrapped async function is returned which will 
-apply the timeout on each invocation.
+If it times out, the returned promise (and the wrapped one)
+will be given an extra property `._timedOut` set to `true`
+
+The returned promise will reject with a `TimeoutError`
+
+## TimeoutError
+
+available as a named export, and as `timeout.TimeoutError`

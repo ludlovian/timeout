@@ -1,12 +1,25 @@
-export default function timeout (p, ms = 5000, _Error = TimeoutError) {
-  if (typeof p === 'function') {
-    return async (...args) => timeout(p(...args), ms, _Error)
-  }
+export default function timeout (pIn, ms) {
+  const pOut = new Promise((resolve, reject) => {
+    let tm
+    if (ms) {
+      tm = setTimeout(() => {
+        pIn._timedOut = pOut._timedOut = true
+        reject(new TimeoutError())
+      }, ms)
+    }
 
-  return new Promise((resolve, reject) => {
-    const tm = setTimeout(() => reject(new _Error('Timed out')), ms)
-    p.then(resolve, reject).finally(() => clearTimeout(tm))
+    pIn.then(
+      result => {
+        if (tm) clearTimeout(tm)
+        resolve(result)
+      },
+      reason => {
+        if (tm) clearTimeout(tm)
+        reject(reason)
+      }
+    )
   })
+  return pOut
 }
 
 class TimeoutError extends Error {
@@ -20,3 +33,5 @@ class TimeoutError extends Error {
 }
 
 timeout.TimeoutError = TimeoutError
+
+export { timeout, TimeoutError }
